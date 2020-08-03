@@ -2,7 +2,7 @@
 @using System.Globalization
 @using BitRateBE.Models
 
-    <div class="text-center">
+    <div class="text-center mt-5">
         <h1>@CurrentRate.ToString("C", CultureInfo.GetCultureInfo("us-US"))/BTC</h1>
         <button disabled="@AutoUpdateEnable" class="btn btn-outline-info" @onclick="Update">Узнать курс</button><br />
         <input name="Update_Check" type="checkbox" @onchange="AutoUpdate"/> Автообновление<br />
