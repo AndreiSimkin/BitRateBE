@@ -1,0 +1,35 @@
+﻿@page "/"
+@using System.Globalization
+@using BitRateBE.Models
+
+    <div class="text-center">
+        <h1>@CurrentRate.ToString("C", CultureInfo.GetCultureInfo("us-US"))/BTC</h1>
+        <button disabled="@AutoUpdateEnable" class="btn btn-outline-info" @onclick="Update">Узнать курс</button><br />
+        <input name="Update_Check" type="checkbox" @onchange="AutoUpdate"/> Автообновление<br />
+    </div>
+@code
+{
+    private float CurrentRate { get; set; }
+    private bool AutoUpdateEnable { get; set; } = false;
+
+    private async void SetNewRate(Rate rate)
+    {
+        CurrentRate = rate.Current;
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    public void Update()
+    {
+        SetNewRate(BitRateBE.Services.Bitmex.GetRate());
+    }
+
+    public void AutoUpdate()
+    {
+        AutoUpdateEnable = !AutoUpdateEnable;   
+        if (AutoUpdateEnable)
+            Services.Bitmex.RateRecived += SetNewRate;
+        else
+            Services.Bitmex.RateRecived -= SetNewRate;
+        
+    }
+}
